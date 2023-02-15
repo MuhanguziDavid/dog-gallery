@@ -1,12 +1,21 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Navbar from './components/navbar/navbar';
 import DogsPage from './pages/dogsPage/dogsPage';
 
 function App() {
   return (
-    <div className="App">
-      <DogsPage />
-    </div>
+    <Router>
+      <div className="App">
+        <Navbar />
+        <div className="content">
+          <Routes>
+            <Route exact path='/' element={<DogsPage />}/>
+            {/* <Route exact path='/about' element={<About />}/> */}
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
 }
 
