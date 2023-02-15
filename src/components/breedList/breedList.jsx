@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 const BreedList = ({breedList}) => {
   console.log(breedList)
   return (
-    <div className="dogs">
-      Breed list here
+    <div className="breed-list">
+      <h2>Breeds</h2>
       {Object.keys(breedList).map((key, index) => (
         <div className="breed" key={index}>
           {breedList[key].length > 0 ? (
