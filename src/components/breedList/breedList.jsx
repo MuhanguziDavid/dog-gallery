@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 
 const BreedList = ({breedList}) => {
-  console.log(breedList)
   return (
     <div className="breed-list">
       <h2>Breeds</h2>
