@@ -70,10 +70,6 @@
 .breed:hover {
   background-color: #eee2e5;
 }
-.link-as-link {
-  color: #333 !important; 
-  text-decoration: none;
-}
 .button-as-link {
   color: #333; 
   text-decoration: none;

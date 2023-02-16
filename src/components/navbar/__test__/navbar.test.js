@@ -1,5 +1,7 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
+import { BrowserRouter, MemoryRouter, Routes, Route } from 'react-router-dom';
+import '@testing-library/jest-dom'
 import Navbar from '../navbar';
 
 const MockNavbar = () => {
@@ -23,11 +25,30 @@ describe("Navbar", () => {
     expect(linkElement).toBeInTheDocument();
   })
 
-  // TODO
-  // it("should navigate when a user clicks a navlink", () => {
-  //   render(<MockNavbar />);
-  //   const linkElement = screen.getByText(/About/i);
-  //   fireEvent.click(linkElement)
-  //   expect(screen.getByText('Here at dog CEO, we show you the most adorable dogs!!')).toBeInTheDocument();
-  // })
+  it("should have navlinks with proper redirect attributes", () => {
+    render(<MockNavbar />);
+    const linkElement = screen.getByText(/About/i);
+    expect(linkElement.href).toContain("/about");
+  })
+
+  // testing links
+  it("should redirect on click of navlinks", async () => {
+    const About = () => <div>about content</div>
+
+    // setup a memory router with your own defined routes
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<Navbar />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </MemoryRouter>
+    );
+    const user = userEvent.setup()
+    const linkElement = screen.getByText(/about/i);
+    expect(linkElement).toBeInTheDocument()
+    expect(screen.queryByText("about content")).not.toBeInTheDocument()
+    await user.click(linkElement)
+    expect(screen.getByText("about content")).toBeInTheDocument()
+  })
 })

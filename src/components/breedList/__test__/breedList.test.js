@@ -1,33 +1,64 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
+import userEvent from "@testing-library/user-event";
 import BreedList from '../breedList';
 
-const MockBreedList = () => {
+const mockNavigate = jest.fn();
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useNavigate: () => mockNavigate
+}));
+
+const breedListMock = {
+  african: [],
+  hound: [
+    "afghan",
+    "basset"
+  ]
+}
+
+const MockBreedList = ({breedList}) => {
   return (
     <BrowserRouter>
-      <BreedList />
+      <BreedList breedList={breedList}/>
     </BrowserRouter>
   )
 }
 
 describe("BreedList", () => {
-  it("should render the left menu header", () => {
-    render(<MockBreedList />);
-    const bannerElement = screen.getByText(/Breeds/i);
-    expect(bannerElement).toBeInTheDocument();
+  it('should render a dog breed', async () => {
+    render(<MockBreedList breedList={breedListMock}/>);
+    const breedElement = await screen.findByText(/african/i)
+    expect(breedElement).toBeInTheDocument();
+  });
+
+  it('should redirect on click of a dog breed', async () => {
+    render(<MockBreedList breedList={breedListMock}/>);
+    const breedElement = await screen.findByText(/hound/i)
+    await userEvent.click(breedElement)
+    expect(mockNavigate).toHaveBeenNthCalledWith(1, "/breed/hound");
+  });
+
+  it("should render multiple dog breeds", async () => {
+    render(<MockBreedList breedList={breedListMock}/>);
+    const breedElements = await screen.findAllByTestId(/breed-item/i)
+    expect(breedElements).toHaveLength(2);
   })
 
-  // TODO
-  // it("should render a dog breed", async () => {
-  //   render(<MockBreedList />);
-  //   const breedElement = await screen.findByTestId("breed-item-0")
-  //   expect(breedElement).toBeInTheDocument();
-  // })
+  it('should render a dog sub-breed', async () => {
+    render(<MockBreedList breedList={breedListMock}/>);
+    const dropdownElement = await screen.findByTestId("dropdown-item-1")
+    fireEvent.click(dropdownElement)
+    const subBreedElement = await screen.findByText(/afghan/i)
+    expect(subBreedElement).toBeInTheDocument();
+  });
 
-  // TODO
-  // it('should render multiple dog breeds', async () => {
-  //   render(<MockBreedList />);
-  //   const breedElements = await screen.findAllByRole(/breed/i)
-  //   expect(breedElements).toHaveLength(2);
-  // });
+  it('should redirect on click of a dog sub-breed', async () => {
+    render(<MockBreedList breedList={breedListMock}/>);
+    const dropdownElement = await screen.findByTestId("dropdown-item-1")
+    await userEvent.click(dropdownElement)
+    const subBreedElement = await screen.findByText(/afghan/i)
+    await userEvent.click(subBreedElement)
+    expect(mockNavigate).toHaveBeenNthCalledWith(1, "/breed/hound/afghan");
+  });
 })
