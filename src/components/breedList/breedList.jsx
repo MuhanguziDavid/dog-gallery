@@ -11,9 +11,9 @@ const BreedList = ({breedList}) => {
 
   return (
     <div className="breed-list">
-      <h2>{Object.keys(breedList).length === 1 ? 'Breed' : 'Breeds'}</h2>
-      {Object.keys(breedList).map((key, index) => (
-        <div className="breed" key={index}>
+      <h2>{breedList && Object.keys(breedList).length === 1 ? 'Breed' : 'Breeds'}</h2>
+      {breedList && Object.keys(breedList).map((key, index) => (
+        <div className="breed" data-testid={`breed-item-${index}`} key={index}>
           {breedList[key].length > 0 ? (
             <Dropdown className="dropdown-group" as={ButtonGroup}>
               <div className="button-as-link" onClick={() => handleClick(key, null)}>{key}</div>
