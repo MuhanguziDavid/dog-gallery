@@ -65,9 +65,23 @@
 }
 .breed {
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 .breed:hover {
   background-color: #eee2e5;
+}
+.link-as-link {
+  color: #333 !important; 
+  text-decoration: none;
+}
+.button-as-link {
+  color: #333; 
+  text-decoration: none;
+}
+.dropdown-toggle-as-link {
+  color: #333 !important; 
+  padding: 0 10px !important;
+  text-decoration: none;
 }
 
 /* gallery */
